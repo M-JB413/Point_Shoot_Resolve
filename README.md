@@ -1,6 +1,6 @@
 # Point Shoot and Resolve
 
-This project is part of our Mobile Application Development course. We are developing a mobile application which would be beneficial for students and the management where we streamline the process of posting and resolving complaints. The tech stack used for this mobile application is: `Flutter and Firebase (Backend As a Server).`
+This project is part of our Mobile Application Development course. We are developing a mobile application which would be beneficial for students and the management where we streamline the process of posting and resolving complaints. The tech stack used for this mobile application is: `Flutter and Firebase (Backend As a Service).`
 
 ## Getting Started
 
