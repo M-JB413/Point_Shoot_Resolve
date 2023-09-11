@@ -1,6 +1,6 @@
-# point_shoot_resolve
+# Point Shoot and Resolve
 
-A new Flutter project.
+This project is part of our Mobile Application Development course. We are developing a mobile application which would be beneficial for students and the management where we streamline the process of posting and resolving complaints. The tech stack used for this mobile application is: `Flutter and Firebase (Backend As a Server).`
 
 ## Getting Started
 
