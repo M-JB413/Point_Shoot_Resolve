@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "811402476053",
+    "project_id": "psr-firebase",
+    "storage_bucket": "psr-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811402476053:android:a65d38d45fe5a60db22c1c",
+        "android_client_info": {
+          "package_name": "com.example.point_shoot_resolve"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811402476053-ko0dg3qe1p9s0ag7pbcka80bpqckpmpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP_Za1mLukC63NatpmyXN6YXn1bwxrw4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811402476053-ko0dg3qe1p9s0ag7pbcka80bpqckpmpo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
