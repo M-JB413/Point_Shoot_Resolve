@@ -26,8 +26,15 @@ class _FillDetailsState extends State<FillDetails> {
 
   final req = RequestRepository();
 
-  void submitRequest(String? name, String? rollNo, BuildContext context) async {
+   bool isLoading = false;
+
+  Future<void> submitRequest(String? name, String? rollNo, BuildContext context) async {
     if (_formkey.currentState!.validate()) {
+
+      setState(() {
+        isLoading = true; // Set loading state to true
+      });
+
       //First upload image to firebase storage
       print("Validation done");
       var storage = FirebaseStorage.instance;
@@ -43,7 +50,7 @@ class _FillDetailsState extends State<FillDetails> {
       // Extract date
       String dateString = parts[0];
       // Extract time
-      String timeString = parts[1]; 
+      String timeString = parts[1];
 
       // print('Date: $dateString');
       // print('Time: $timeString');
@@ -56,10 +63,14 @@ class _FillDetailsState extends State<FillDetails> {
         "Image URL": imageURL,
         "Date": dateString,
         "Time": timeString,
-        "isResolved":false
+        "isResolved": false
       };
       await req.createEntry(context, data);
-      Navigator.pushReplacementNamed(context, MyRoutes.loggedIn);
+      Navigator.pushReplacementNamed(context, MyRoutes.loggedInStudent);
+
+      setState(() {
+        isLoading = false; // Set loading state to true
+      });
     }
   }
 
@@ -191,10 +202,9 @@ class _FillDetailsState extends State<FillDetails> {
                         height: 25,
                       ),
                       ElevatedButton(
-                        onPressed: () async {
+                        onPressed: isLoading ? null : () async {
                           // form submission here
-                          submitRequest(authProvider.getUser()!.name,
-                              authProvider.getUser()!.rollNo, context);
+                          await submitRequest(authProvider.getUser()!.name, authProvider.getUser()!.rollNo, context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -204,11 +214,9 @@ class _FillDetailsState extends State<FillDetails> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        child: const Text(
-                          'Submit',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, letterSpacing: 1.2),
-                        ),
+                        child: isLoading 
+                        ? const CircularProgressIndicator() // Loading indicator
+                        : const Text("Submit"),
                       ),
                     ],
                   ),

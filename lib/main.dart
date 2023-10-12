@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:point_shoot_resolve/pages/image_capture.dart';
 import 'package:point_shoot_resolve/pages/loginAdmin_page.dart';
 import 'package:point_shoot_resolve/pages/loginChoice_page.dart';
-import 'package:point_shoot_resolve/pages/home_page.dart';
+import 'package:point_shoot_resolve/pages/home_page_student.dart';
 import 'package:point_shoot_resolve/pages/signup_page.dart';
 import 'package:point_shoot_resolve/pages/submit_form.dart';
 import 'package:point_shoot_resolve/pages/view_requests_page.dart';
@@ -10,8 +11,9 @@ import 'package:point_shoot_resolve/pages/welcome_page.dart';
 import 'package:point_shoot_resolve/providers/user_provider.dart';
 import 'package:point_shoot_resolve/routes/routes.dart';
 import 'package:provider/provider.dart';
+import "package:hive/hive.dart";
+import 'package:hive_flutter/hive_flutter.dart';
 import 'utils/constants/firebase_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /*
@@ -25,9 +27,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // ignore: unnecessary_string_escapes
   await dotenv.load(fileName: "lib/.env");
   await firebaseInitialization;
+  await Hive.initFlutter();
   runApp(const MyApp());
 }
 
@@ -51,52 +53,13 @@ class MyApp extends StatelessWidget {
         initialRoute: '/welcome',
         routes: {
           MyRoutes.welcomeRoute: (context) => const WelcomePage(),
-          MyRoutes.loginRoute: (context) =>
-              LoginPage(navigatorKey: navigatorKey),
-          // MyRoutes.loginRoute: (context) {
-          //   return StreamBuilder<User?>(
-          //     stream: FirebaseAuth.instance.authStateChanges(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.hasData) {
-          //         return const AdminPage();
-          //       } else {
-          //         return LoginPage(navigatorKey: navigatorKey);
-          //       }
-          //     },
-          //   );
-          //Remember to remove this return statement and make it return StreamBuilder
-          //This ensures that till the user logs out, the state is maintained.
-          // return const LoginPage();
-          // },
+          MyRoutes.loginRoute: (context) => LoginPage(navigatorKey: navigatorKey),
           MyRoutes.signUpRoute: (context) => const SignUpPage(),
-          MyRoutes.loggedIn: (context) => const AdminPage(),
+          MyRoutes.loggedInStudent: (context) => const HomePageStudent(),
           MyRoutes.adminLogin: (context) => const AdminLogin(),
           MyRoutes.postRequest_1: (context) => const CaptureImage(),
           MyRoutes.postRequest_2: (context) => const FillDetails(),
           MyRoutes.viewRequest: (context) => const ViewRequests()
-
-          /*
-            MyRoutes.loginRoute: (context) {
-              if (FirebaseAuth.instance.currentUser != null) {
-                return const AdminPage();
-              } else {
-                return LoginPage();
-              }
-            },
-    
-            MyRoutes.loginRoute: (context) {
-              return StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return const AdminPage();
-                  } else {
-                    return const LoginPage();
-                  }
-                },
-              );
-            },
-          */
         },
       ),
     );

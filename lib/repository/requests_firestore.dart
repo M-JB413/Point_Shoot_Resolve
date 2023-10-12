@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/requestData.dart';
+import '../model/request_data.dart';
 
 class RequestRepository {
   final _fireStore = FirebaseFirestore.instance;
@@ -30,7 +30,7 @@ class RequestRepository {
         ),
       );
     } catch (error) {
-      print(error.toString());
+      // print(error.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
@@ -67,9 +67,12 @@ class RequestRepository {
     return userRequests;
   }
 
-  Future<List<RequestData>> getAllRequests() async {
+  Future<List<RequestData>> getDepartmentRequestsResolved(
+      String department) async {
     final snapshot = await _fireStore
         .collection("Requests")
+        .where("Department", isEqualTo: department)
+        .where("isResolved", isEqualTo: true)
         .get();
     final userRequests = snapshot.docs
         .map((e) => RequestData.fromSnapshot(e))
@@ -78,4 +81,62 @@ class RequestRepository {
     return userRequests;
   }
 
+  Future<List<RequestData>> getDepartmentRequestsPending(
+      String department) async {
+    final snapshot = await _fireStore
+        .collection("Requests")
+        .where("Department", isEqualTo: department)
+        .where("isResolved", isEqualTo: false)
+        .get();
+    final userRequests = snapshot.docs
+        .map((e) => RequestData.fromSnapshot(e))
+        .toList(); //single value or toList
+
+    return userRequests;
+  }
+
+  Future<List<RequestData>> getAllRequests() async {
+    final snapshot = await _fireStore.collection("Requests").get();
+    final userRequests = snapshot.docs
+        .map((e) => RequestData.fromSnapshot(e))
+        .toList(); //single value or toList
+
+    return userRequests;
+  }
+
+  Future<List<RequestData>> getAllRequestsResolved() async {
+    final snapshot = await _fireStore
+        .collection("Requests")
+        .where("isResolved", isEqualTo: true)
+        .get();
+    final userRequests = snapshot.docs
+        .map((e) => RequestData.fromSnapshot(e))
+        .toList(); //single value or toList
+
+    return userRequests;
+  }
+
+  Future<List<RequestData>> getAllRequestsPending() async {
+    final snapshot = await _fireStore
+        .collection("Requests")
+        .where("isResolved", isEqualTo: false)
+        .get();
+    final userRequests = snapshot.docs
+        .map((e) => RequestData.fromSnapshot(e))
+        .toList(); //single value or toList
+
+    return userRequests;
+  }
+
+  Future<void> resolveComplaint(RequestData data) async {
+      await _fireStore
+          .collection("Requests")
+          .doc(data.id)
+          .update(data.updateComplaint());
+
+    // final userRequest =
+    //     await _fireStore.collection("Requests").doc(data.id).get();
+
+    // return userRequest;
+  }
 }

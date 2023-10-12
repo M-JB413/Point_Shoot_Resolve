@@ -86,21 +86,19 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../repository/requests_firestore.dart';
-import '../utils/requestData.dart';
+import '../model/request_data.dart';
 
-class AdminPage extends StatefulWidget {
-  const AdminPage({super.key});
+class HomePageStudent extends StatefulWidget {
+  const HomePageStudent({super.key});
 
   @override
-  State<AdminPage> createState() => _AdminPageState();
+  State<HomePageStudent> createState() => _HomePageStudentState();
 }
 
-class _AdminPageState extends State<AdminPage> {
-  final imageURL =
-      'https://cdn4.vectorstock.com/i/thumb-large/23/88/person-gray-photo-placeholder-man-vector-23522388.jpg';
+class _HomePageStudentState extends State<HomePageStudent> {
+  final req = RequestRepository();
 
   void viewRequests(String? rollNo) async {
-    final req = RequestRepository();
     final Future<List<RequestData>> requests = req.getUserRequests(rollNo!);
 
     Navigator.of(context).push(MaterialPageRoute(
@@ -108,6 +106,17 @@ class _AdminPageState extends State<AdminPage> {
 
     // Navigator.pushNamed(context, MyRoutes.viewRequest);
   }
+
+  // void viewRequestsAdmin() async {
+  //   final Future<List<RequestData>> allRequests = req.getAllRequests();
+
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) => ViewRequestsAdmin(requestData: allRequests)));
+  // }
+
+  // void viewRequestsDepartment(String? department) async {
+  //   final Future<List<RequestData>> allRequests = req.getAllRequests();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +200,7 @@ class _AdminPageState extends State<AdminPage> {
               ElevatedButton(
                 onPressed: () async {
                   //navigation logic here
-                  authProvider.getUser()!.designation != "Student"
-                      ? await authProvider.signOutFirebase()
-                      : await authProvider.signOutMicrosoft();
+                  await authProvider.signOutMicrosoft();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

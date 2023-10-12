@@ -1,18 +1,12 @@
-// import 'package:flutter/material.dart';
-
-// class AuthenticationProvider extends ChangeNotifier {
-//   User? _user;
-
-// }
-
 import 'package:flutter/material.dart';
+import 'package:point_shoot_resolve/pages/home_page_admin.dart';
 import 'package:point_shoot_resolve/routes/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:point_shoot_resolve/utils/constants/micrsoft_aad_constants.dart';
 
-import '../utils/user.dart';
+import '../model/user.dart';
 
 class AuthProvider extends ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -26,54 +20,63 @@ class AuthProvider extends ChangeNotifier {
     _formState = formState;
   }
 
-
-  // final _formKey = GlobalKey<FormState>();
-
-  // User? get currentUser => FirebaseAuth.instance.currentUser;
-
   UserDetails? _user;
 
   void setUser(UserDetails? user) {
     _user = user;
-    notifyListeners(); // Notify listeners that the user has changed
+    notifyListeners();
   }
 
   UserDetails? getUser() {
     return _user;
   }
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
-    //for firebase - email: user.email
-    //name: user.displayName
+  Future<void> signInWithEmailAndPassword(
+      String email, String password, BuildContext context) async {
+    try {
+      if (_formState != null && _formState!.validate()) {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        // Updating Display Name - Do it once for each type of admin
+        // await FirebaseAuth.instance.currentUser!.updateDisplayName("Plumbing Department");
+        String _desig =
+            FirebaseAuth.instance.currentUser!.email!.substring(0, 5);
+        String _designation = "";
+        if (_desig == 'admin') {
+          _designation = "Admin";
+        } else if (_desig == "elect") {
+          _designation = "Electrical Department";
+        } else if (_desig == "plumb") {
+          _designation = "Plumbing Department";
+        } else if (_desig == "carpe") {
+          _designation = "Hardware Department";
+        } else if (_desig == "adoff") {
+          // /adOff@amrita.com //adminOffice1234
+          _designation = "Admin Office";
+        }
+        final user = UserDetails(
+          name: FirebaseAuth.instance.currentUser!.displayName,
+          rollNo: null,
+          emailID: FirebaseAuth.instance.currentUser!.email,
+          designation: _designation,
+        );
 
-    if (_formState != null && _formState!.validate()) {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      //Updating Display Name - Do it once for each type of admin
-      // await FirebaseAuth.instance.currentUser!.updateDisplayName("Sai Sidharth");
-      String _desig = FirebaseAuth.instance.currentUser!.email!.substring(0, 5);
-      String _designation = "";
-      if (_desig == 'admin') {
-        _designation = "Admin";
-      } else if (_desig == "elect") {
-        _designation = "Electrical Dept";
-      } else if (_desig == "water") {
-        _designation = "Plumbing Dept";
-      } else if (_desig == "carpe") {
-        _designation = "Hardware Dept";
+        setUser(user);
+        Navigator.of(navigatorKey.currentContext!).push(MaterialPageRoute(
+        builder: (context) => HomePageAdmin(dept:_designation)));
       }
-      // if(FirebaseAuth.instance.currentUser!.email)
-
-      final user = UserDetails(
-        name: FirebaseAuth.instance.currentUser!.displayName,
-        rollNo: null,
-        emailID: FirebaseAuth.instance.currentUser!.email,
-        //(water)_dept, (elect)rical_dept, (admin)_amrita, (carpe)nter_dept
-        designation: _designation,
+    } catch (error) {
+      // Handle the error here
+      // print("Error signing in: $error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Incorrect Credentials. Try again',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          duration: Duration(seconds: 3), // Adjust the duration as needed
+        ),
       );
-
-      setUser(user);
-      Navigator.pushNamed(navigatorKey.currentContext!, MyRoutes.loggedIn);
     }
   }
 
@@ -83,7 +86,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOutMicrosoft() async {
-    final AadOAuth microsoftOauth = OAuthConfig.createMicrosoftOAuth(navigatorKey);
+    final AadOAuth microsoftOauth =
+        OAuthConfig.createMicrosoftOAuth(navigatorKey);
     await microsoftOauth.logout();
     Navigator.pushNamed(navigatorKey.currentContext!, MyRoutes.welcomeRoute);
   }
@@ -101,7 +105,8 @@ class AuthProvider extends ChangeNotifier {
         List<String> _parts = _nameRollNo.split(' - [');
         String _name = _parts[0]
             .trim(); // Extract the name and remove leading/trailing spaces
-        String _rollNo = _parts[1].replaceAll(']', ''); // Extract the roll number and remove the closing bracket
+        String _rollNo = _parts[1].replaceAll(
+            ']', ''); // Extract the roll number and remove the closing bracket
 
         final user = UserDetails(
           name: _name,
@@ -112,7 +117,8 @@ class AuthProvider extends ChangeNotifier {
         );
 
         setUser(user);
-        Navigator.pushNamed(navigatorKey.currentContext!, MyRoutes.loggedIn);
+        Navigator.pushNamed(
+            navigatorKey.currentContext!, MyRoutes.loggedInStudent);
         // showMessage('Logged in successfully, your access token: ${idTokenPayload['name']}');
       },
     );

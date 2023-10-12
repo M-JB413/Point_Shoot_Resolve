@@ -14,7 +14,8 @@ class _AdminLoginState extends State<AdminLogin> {
   final _formKey = GlobalKey<FormState>();
   String email = "";
   String password = "";
-  bool _passwordVisibility = false;
+  bool _passwordVisibility = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,27 +80,24 @@ class _AdminLoginState extends State<AdminLogin> {
                           style: const TextStyle(color: Colors.white),
                           obscureText: _passwordVisibility,
                           decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: const TextStyle(color: Colors.white),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordVisibility 
-                                ? Icons.visibility
-                                : Icons.visibility_off
+                              labelText: 'Password',
+                              labelStyle: const TextStyle(color: Colors.white),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
                               ),
-                              onPressed: (){
-                                setState(() {
-                                  _passwordVisibility = !_passwordVisibility;
-                                });
-                              },
-                            )
-                          ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(_passwordVisibility
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisibility = !_passwordVisibility;
+                                  });
+                                },
+                              )),
                           validator: (value) {
                             if (password.isEmpty) {
                               return "Password Cannot be empty";
@@ -113,26 +111,43 @@ class _AdminLoginState extends State<AdminLogin> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            auth.setFormState(_formKey.currentState);
-                            auth.signInWithEmailAndPassword(email, password);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                            onPressed: isLoading ? null : () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              auth.setFormState(_formKey.currentState);
+                              auth.signInWithEmailAndPassword(email, password, context)
+                              .then((value) {
+                                // Process completed successfully
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              })
+                              .catchError((error) {
+                                // Handle errors here
+                                // print("Error: $error");
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              fixedSize: const Size(120, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontSize: 18,
+                            child: isLoading
+                                ? const CircularProgressIndicator() // Loading indicator
+                                : const Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  )
                             ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

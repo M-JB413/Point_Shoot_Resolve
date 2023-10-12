@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   #Firebase Database
-  cloud_firestore: ^4.9.1
+  cloud_firestore: ^4.8.2
   firebase_core: ^2.15.1
   firebase_auth: ^4.8.0
   # firebase_auth_oauth: 
@@ -52,10 +52,19 @@ dependencies:
   intl: ^0.18.1
   flutter_image_compress: ^2.0.4
   provider:
+  pie_chart: ^5.3.2
+  flutter_speed_dial: ^7.0.0
+  # fluttertoast: ^8.2.2
+  toast: ^0.2.9
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  build_runner: ^2.4.6
+  hive_generator: ^2.0.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -78,7 +87,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/black/
     - lib/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see

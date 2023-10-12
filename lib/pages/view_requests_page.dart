@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:point_shoot_resolve/pages/details_page.dart';
-import 'package:point_shoot_resolve/utils/requestData.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:point_shoot_resolve/pages/details_page_student.dart';
+import 'package:point_shoot_resolve/model/request_data.dart';
 
 import '../repository/requests_firestore.dart';
 
@@ -14,13 +15,24 @@ class ViewRequests extends StatefulWidget {
 }
 
 class _ViewRequestsState extends State<ViewRequests> {
-  var arrNums = ["One", "Two", "Three", "Four", "Five", "Six", "Seven"];
-  final imageURL =
-      "https://firebasestorage.googleapis.com/v0/b/psr-firebase.appspot.com/o/Uploads%2F4f336fd3-1a91-410f-84eb-8a0b9700ab1f5188953137647977377.jpg?alt=media&token=46b8c0a8-ae0d-456d-887f-c2b68c40fa24";
-
   // final req = RequestRepository();
 
   // final List<RequestData> requests = req.getUserRequests()
+
+  // ImageProvider<Object>? getSVG(String department) {
+  //   AssetImage image;
+  //   if (department == "Electrical Department") {
+  //     image = AssetImage("assets/images/light-bulb-svgrepo-com.svg");
+  //   } else if (department == "Plumbing Department") {
+  //     image = AssetImage("assets/images/water-tap-plumber-svgrepo-com.svg");
+  //   } else if (department == "Hardware Department") {
+  //     image = AssetImage("assets/images/hardware-svgrepo-com.jpg");
+  //   } else {
+  //     image = AssetImage("assets/images/admin-users-svgrepo-com.svg");
+  //   }
+
+  //   return image;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +44,7 @@ class _ViewRequestsState extends State<ViewRequests> {
         title: const Text("View Request"),
         foregroundColor: Colors.white,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: FutureBuilder<List<RequestData>>(
           future: widget.requestData!,
           builder: (context, snapshot) {
@@ -47,7 +59,7 @@ class _ViewRequestsState extends State<ViewRequests> {
                     ),
                     Text(
                       "Please wait while we fetch your data...",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     )
                   ],
                 ),
@@ -65,27 +77,64 @@ class _ViewRequestsState extends State<ViewRequests> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DetailsPage(userRequest: request)));
+                                  builder: (context) =>
+                                      DetailsPageStudent(userRequest: request)));
                         },
+                        // leading: CircleAvatar(
+                        //     // backgroundColor: Colors.black,
+                        //     backgroundImage: request.department ==
+                        //             "Electrical Department"
+                        //         ? const AssetImage(
+                        //             "assets/images/electricity.png")
+                        //         : request.department == "Plumbing Department"
+                        //             ? const AssetImage(
+                        //                 "assets/images/plumbing.png")
+                        //             : request.department == "Hardware Department"
+                        //                 ? const AssetImage(
+                        //                     "assets/images/hardware.png")
+                        //                 : const AssetImage(
+                        //                     "assets/images/administrator.png"),
+                            
+                        //   ),
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(request.imageURL),
+                          backgroundColor: Colors.black,
+                          child: Container(
+                            width: 30, 
+                            height: 30, 
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: request.department == "Electrical Department"
+                                    ? const AssetImage("assets/images/electricity.png")
+                                    : request.department == "Plumbing Department"
+                                        ? const AssetImage("assets/images/plumbing.png")
+                                        : request.department == "Hardware Department"
+                                            ? const AssetImage("assets/images/hardware.png")
+                                            : const AssetImage("assets/images/administrator.png"),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
                         ),
                         title: Text(
-                          request.name,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          request.department,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, color: Colors.white),
                         ),
                         subtitle: Text(
                           request.description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(height: 1.3),
+                          style:
+                              const TextStyle(height: 1.3, color: Colors.white),
                         ),
                         // isThreeLine: true,
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(request.date,
-                                style: const TextStyle(fontSize: 12)),
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.white)),
                             // Text("8:18pm", style: TextStyle(fontSize: 12))
                           ],
                         ));
@@ -94,7 +143,7 @@ class _ViewRequestsState extends State<ViewRequests> {
                     // return Padding(padding: EdgeInsets.all(8.0));
                     return const Divider(
                       height: 30,
-                      color: Color.fromARGB(27, 0, 0, 0),
+                      color: Color.fromARGB(48, 153, 152, 152),
                       thickness: 1.2,
                     );
                   },

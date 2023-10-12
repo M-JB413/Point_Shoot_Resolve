@@ -48,7 +48,6 @@ class _CaptureImageState extends State<CaptureImage> {
         //   ),
         // );
       }
-      // ... (existing code)
     } catch (e) {
       print('Error taking picture: $e');
     }
@@ -76,34 +75,39 @@ class _CaptureImageState extends State<CaptureImage> {
   }
 
   Future<void> _pickImage() async {
-    final imagePicker = ImagePicker();
-    final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImage = File(pickedImage.path);
-      });
-      var result = await FlutterImageCompress.compressAndGetFile(
-        _selectedImage!.absolute.path,
-        _selectedImage!.absolute.path,
-        quality: 50,
-      );
-      setState(() {
-        _selectedImage = File(result!.path);
-      });
-      // String imageURL = await uploadToFirebaseStorage();
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => FillDetails(imageFile: _selectedImage, imageURL: imageURL)));
+    try {
+      final imagePicker = ImagePicker();
+      final takenImage =
+          await imagePicker.pickImage(source: ImageSource.gallery);
+      if (takenImage != null) {
+        setState(() {
+          _selectedImage = File(takenImage.path);
+        });
+        var result = await FlutterImageCompress.compressAndGetFile(
+          _selectedImage!.absolute.path,
+          "${_selectedImage!.path}compressed.jpg",
+          quality: 50,
+        );
+        setState(() {
+          _compressedImage = File(result!.path);
+        });
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => FillDetails(imageFile: _selectedImage)));
+        // String imageURL = await uploadToFirebaseStorage();
+        // Navigator.of(context).push(MaterialPageRoute(
+        // builder: (context) => FillDetails(imageFile: _selectedImage, imageURL: imageURL)));
 
-      // Navigate to Postform screen
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => Postform(imageFile: _selectedImage),
-      //   ),
-      // );
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => FillDetails(imageFile: _compressedImage)));
+
+        // Navigate to Postform screen
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => Postform(imageFile: _selectedImage),
+        //   ),
+        // );
+      }
+    } catch (e) {
+      print('Error taking picture: $e');
     }
   }
 

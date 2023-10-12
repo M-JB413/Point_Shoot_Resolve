@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class RequestData {
   final String? id;
@@ -23,13 +22,12 @@ class RequestData {
       required this.location,
       required this.time,
       required this.isResolved,
-      required this.department
-    });
+      required this.department});
 
   factory RequestData.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
-      final data = document.data()!;
-      return RequestData(
+    final data = document.data()!;
+    return RequestData(
         id: document.id,
         name: data["Name"],
         rollNo: data["Roll No"],
@@ -39,7 +37,13 @@ class RequestData {
         location: data["Location"],
         time: data["Time"],
         isResolved: data["isResolved"],
-        department: data["Department"]
-      );
+        department: data["Department"]);
+  }
+
+  updateComplaint() {
+    //Since we are only updating this particular field
+    return {
+      "isResolved": true,
+    };
   }
 }
