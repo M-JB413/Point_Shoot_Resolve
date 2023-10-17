@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:point_shoot_resolve/pages/image_capture.dart';
 import 'package:point_shoot_resolve/pages/loginAdmin_page.dart';
 import 'package:point_shoot_resolve/pages/loginChoice_page.dart';
@@ -11,8 +10,6 @@ import 'package:point_shoot_resolve/pages/welcome_page.dart';
 import 'package:point_shoot_resolve/providers/user_provider.dart';
 import 'package:point_shoot_resolve/routes/routes.dart';
 import 'package:provider/provider.dart';
-import "package:hive/hive.dart";
-import 'package:hive_flutter/hive_flutter.dart';
 import 'utils/constants/firebase_constants.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -29,7 +26,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "lib/.env");
   await firebaseInitialization;
-  await Hive.initFlutter();
   runApp(const MyApp());
 }
 

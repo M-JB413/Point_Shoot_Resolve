@@ -135,6 +135,24 @@ class _ViewRequestsState extends State<ViewRequests> {
                             Text(request.date,
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.white)),
+                            const SizedBox(height: 10,),
+                            request.isResolved 
+                              ? const Text(
+                                  "Resolved", 
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                                )
+                              : const Text(
+                                  "Not Resolved", 
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold
+                                  )
+                                )
                             // Text("8:18pm", style: TextStyle(fontSize: 12))
                           ],
                         ));

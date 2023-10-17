@@ -123,7 +123,7 @@ class _DetailsPageStudentState extends State<DetailsPageStudent> {
                               ),
                         ),
                         TextSpan(
-                            text: widget.userRequest.isResolved == "true" ? "Resolved" : "Pending",
+                            text: widget.userRequest.isResolved == true ? "Resolved" : "Pending",
                             style: const TextStyle(color: Colors.white, fontSize: 16)
                             // Add any styles you want for the description here
                             ),
